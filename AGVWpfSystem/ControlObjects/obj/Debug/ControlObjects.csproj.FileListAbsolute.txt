@@ -1,0 +1,9 @@
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\bin\Debug\ControlObjects.dll
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\bin\Debug\ControlObjects.pdb
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\bin\Debug\HslCommunication.dll
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\bin\Debug\Newtonsoft.Json.dll
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\bin\Debug\HslCommunication.xml
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\bin\Debug\Newtonsoft.Json.xml
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\obj\Debug\ControlObjects.csprojResolveAssemblyReference.cache
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\obj\Debug\ControlObjects.dll
+E:\MyCode\AGVWpfSystem\AGVWpfSystem\ControlObjects\obj\Debug\ControlObjects.pdb
