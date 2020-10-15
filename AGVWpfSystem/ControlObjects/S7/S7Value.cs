@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControlObjects.ModubusTcp {
-    class ModbusAdress {
+namespace ControlObjects.S7 {
+    class S7Value :DeviceValue{
     }
 }

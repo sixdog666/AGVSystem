@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControlObjects.ModubusTcp {
-    class ModbusTcpAdressFactory {
+namespace ControlObjects.OPCUA {
+    class OPCValue:DeviceValue {
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ControlObjects {
-    class DeviceInfoFactory {
+   public abstract class DeviceInfoFactory {
+        public abstract void CreateCommDevice(DeviceBase device, string strFilePath);
     }
 }

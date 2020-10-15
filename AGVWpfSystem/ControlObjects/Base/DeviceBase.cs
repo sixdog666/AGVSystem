@@ -1,58 +1,98 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ControlObjects {
-    public struct ValueInfo {
-      public Type valueType;
-        public string adress;
+    public struct AdressValueInfo {
+        public Type valueType;
+        public DeviceAdress adress;
+        public DeviceValue deviceValue;
         public ushort length;
     }
-  public abstract class DeviceBase {
-
-        private Hashtable InputSignal;
-        private Hashtable OutputSignal;
-        private Hashtable StatusSignal;
-        protected string adressName;
+    public abstract class DeviceBase {
+        protected byte[] SynInputs;
+        protected byte[] SynOutputs;
+        protected DataTable realTimeInputSignals;
+        protected DataTable realTimeOutputSignals;
+        protected DeviceAdress startInputsAdress;
+        protected DeviceAdress startOutputsAdress;
+        private Hashtable InputSignals;
+        private Hashtable OutputSignals;
+        protected bool inputThreadRun = false;
+        protected bool outputThreadRun = false;
+        protected string deviceName;
 
         public DeviceBase(string strName) {
-            adressName = strName;
-            InputSignal = new Hashtable();
-            OutputSignal = new Hashtable();
-            StatusSignal = new Hashtable();
+            deviceName = strName;
+            SynInputs = new byte[128];
+            SynOutputs = new byte[128];
+            InputSignals = new Hashtable();
+            OutputSignals = new Hashtable();
+
         }
+        public DeviceAdress StartInputsAdress {
+            set { startInputsAdress = value; }
+            get { return startInputsAdress; }
+        }
+        public DeviceAdress StartOutputsAdress {
+            set { startOutputsAdress = value; }
+            get { return startOutputsAdress; }
+        }
+
         public Hashtable Inputs {
             get {
-                return InputSignal;
+                return InputSignals;
             }
         }
         public Hashtable Outputs {
             get {
-                return OutputSignal;
-            }
-        }
-        public Hashtable Status {
-            get {
-                return StatusSignal;
+                return OutputSignals;
             }
         }
 
-        public void AddInputSignal(string signalName, ValueInfo signalInfo) {
-            InputSignal.Add(signalName, signalInfo);
+        public DataTable RealTimeInputSignals {
+            get {
+                return realTimeInputSignals;
+            }
+
         }
-        public void AddOutputSignal(string signalName, ValueInfo signalInfo) {
-            OutputSignal.Add(signalName, signalInfo);
+        public DataTable RealTimeOutputSignals {
+            get {
+                return realTimeOutputSignals;
+            }
+
         }
-        public void AddStatusSignal(string signalName, ValueInfo signalInfo) {
-            StatusSignal.Add(signalName, signalInfo);
+
+        public void AddInputSignal(string signalName, AdressValueInfo signalInfo) {
+            InputSignals.Add(signalName, signalInfo);
+        }
+        public void AddOutputSignal(string signalName, AdressValueInfo signalInfo) {
+            OutputSignals.Add(signalName, signalInfo);
+        }
+        public void RealTimeSignalThreadStart(string startInputAdr, string endInputAdr) {
+            Thread threadRead = new Thread(ReadRealTimeSignal);
+            if (threadRead.ThreadState != ThreadState.Running) {
+                threadRead.Start();
+            }
+            Thread threadWrite = new Thread(WriteRealTimeSignal);
+            if (threadWrite.ThreadState != ThreadState.Running) {
+                threadWrite.Start();
+            }
+
+        }
+        public void ReadTimeSignalThreadStop() {
+            inputThreadRun = false;
+            outputThreadRun = false;
         }
         /// <summary>
         /// 连接控制器
         /// </summary>
-     public abstract  bool Connect();
+        public abstract bool Connect();
 
         // void ConnectAsync();
         /// <summary>
@@ -68,111 +108,16 @@ namespace ControlObjects {
         /// 读输入信号
         /// </summary>
         /// <returns></returns>
-        public  object ReadInputSignal(string signalName) {
-            if (Inputs.ContainsKey(signalName)) {
-                ValueInfo value = (ValueInfo)Inputs[signalName];
-                switch (value.valueType.ToString()) {
-                    case "System.UInt16":
-                        return ReadUInt16(value.adress);
-                    case "System.Uint32":
-                        return ReadUInt32(value.adress);
-                    case "System.Uint64":
-                        return ReadUInt64(value.adress);
-                    case "System.Int16":
-                        return ReadInt16(value.adress);
-                    case "System.Int32":
-                        return ReadInt32(value.adress);
-                    case "System.Int64":
-                        return ReadInt64(value.adress);
-                    case "System.Boolean":
-                        return ReadBoolean(value.adress);
-                    case "System.Byte":
-                        return ReadByte(value.adress);
-                    case "System.Sbyte":
-                        return ReadSbyte(value.adress);
-                    case "System.Double":
-                        return ReadDouble(value.adress);
-                    case "System.Single":
-                        return ReadSingle(value.adress);
-                    case "System.String":
-                        return ReadString(value.adress,value.length);
-                }
-            }
-            return null;
-        }
+        public abstract object ReadInputSignal(string signalName);
 
-        /// <summary>
-        /// 读状态信号
-        /// </summary>
-        /// <returns></returns>
-        public abstract object ReadStateSignal(string signalName);
-        /// <summary>
         /// 写输出信号
         /// </summary>
-        public void WriteOutputSignal(string signalName, object value) {
-            if (Outputs.ContainsKey(signalName)) {
-                ValueInfo output = (ValueInfo)Outputs[signalName];
-                switch (output.valueType.ToString()) {
-                    case "System.UInt16":
-                        Write(output.adress, (ushort)value);
-                        break;
-                    case "System.Uint32":
-                        Write(output.adress, (uint)value);
-                        break;
-                    case "System.Uint64":
-                        Write(output.adress, (ulong)value);
-                        break;
-                    case "System.Int16":
-                        Write(output.adress, (short)value);
-                        break;
-                    case "System.Int32":
-                        Write(output.adress, (int)value);
-                        break;
-                    case "System.Int64":
-                        Write(output.adress, (long)value);
-                        break;
-                    case "System.Boolean":
-                        Write(output.adress, (bool)value);
-                        break;
-                    case "System.Byte":
-                        Write(output.adress, (byte)value);
-                        break;
-                    case "System.Sbyte":
-                        Write(output.adress, (sbyte)value);
-                        break;
-                    case "System.Double":
-                        Write(output.adress, (double)value);
-                        break;
-                    case "System.Single":
-                        Write(output.adress, (float)value);
-                        break;
-                    case "System.String":
-                        Write(output.adress, (string)value);
-                        break;
-                }
-            }
-        }
-internal abstract void Write(string adress, double value);
-        protected abstract void Write(string adress, ulong value);
-        protected abstract System.UInt16 ReadUInt16(string adress);
-        protected abstract System.UInt32 ReadUInt32(string adress);
-        protected abstract System.UInt64 ReadUInt64(string adress);
-        protected abstract System.Int16 ReadInt16(string adress);
-        protected abstract System.Int32 ReadInt32(string adress);
-        protected abstract System.Int64 ReadInt64(string adress);
-        protected abstract System.Boolean ReadBoolean(string adress);
+        /// 
+        public abstract void WriteOutputSignal(string signalName, object value);
 
-        protected abstract System.Byte ReadByte(string adress);
-        protected abstract System.SByte ReadSbyte(string adress);
+        protected abstract void ReadRealTimeSignal();
 
-        protected abstract System.Double ReadDouble(string adress);
-        protected abstract System.Single ReadSingle(string adress);
-        protected abstract System.String ReadString(string adress, ushort length);
-        protected abstract void Write(string adress, bool Value);
-        protected abstract void Write(string adress, short Value);
-        protected abstract void Write(string adress, ushort Value);
-        protected abstract void Write(string adress, long Value);
-        protected abstract void Write(string adress, byte Value);
-        protected abstract void Write(string adress, string Value);
+        protected abstract void WriteRealTimeSignal();
+
     }
 }

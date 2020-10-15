@@ -5,6 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ControlObjects {
-    class DeviceBaseInfo {
+   public class DeviceBaseInfo {
+
+    }
+    public abstract class DeviceAdress {
+
+    }
+    public abstract class DeviceValue {
     }
 }

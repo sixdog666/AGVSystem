@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Server.Kestrel.Https</name>
+    </assembly>
+    <members>
+        <member name="F:Microsoft.Extensions.Internal.TaskCache.CompletedTask">
+            <summary>
+            A <see cref="T:System.Threading.Tasks.Task"/> that's already completed successfully.
+            </summary>
+            <remarks>
+            We're caching this in a static readonly field to make it more inlinable and avoid the volatile lookup done
+            by <c>Task.CompletedTask</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.TaskCache`1.DefaultCompletedTask">
+            <summary>
+            Gets a completed <see cref="T:System.Threading.Tasks.Task"/> with the value of <c>default(T)</c>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.KestrelServerOptionsHttpsExtensions.UseHttps(Microsoft.AspNetCore.Server.Kestrel.KestrelServerOptions,System.String)">
+            <summary>
+            Configure Kestrel to use HTTPS.
+            </summary>
+            <param name="options">
+            The Microsoft.AspNetCore.Server.KestrelServerOptions to configure.
+            </param>
+            <param name="fileName">
+            The name of a certificate file, relative to the directory that contains the application content files.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Server.KestrelServerOptions.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.KestrelServerOptionsHttpsExtensions.UseHttps(Microsoft.AspNetCore.Server.Kestrel.KestrelServerOptions,System.String,System.String)">
+            <summary>
+            Configure Kestrel to use HTTPS.
+            </summary>
+            <param name="options">
+            The Microsoft.AspNetCore.Server.KestrelServerOptions to configure.
+            </param>
+            <param name="fileName">
+            The name of a certificate file, relative to the directory that contains the application content files.
+            </param>
+            <param name="password">
+            The password required to access the X.509 certificate data.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Server.KestrelServerOptions.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.KestrelServerOptionsHttpsExtensions.UseHttps(Microsoft.AspNetCore.Server.Kestrel.KestrelServerOptions,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Configure Kestrel to use HTTPS.
+            </summary>
+            <param name="options">
+            The Microsoft.AspNetCore.Server.KestrelServerOptions to configure.
+            </param>
+            <param name="serverCertificate">
+            The X.509 certificate.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Server.KestrelServerOptions.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.KestrelServerOptionsHttpsExtensions.UseHttps(Microsoft.AspNetCore.Server.Kestrel.KestrelServerOptions,Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionFilterOptions)">
+            <summary>
+            Configure Kestrel to use HTTPS.
+            </summary>
+            <param name="options">
+            The Microsoft.AspNetCore.Server.KestrelServerOptions to configure.
+            </param>
+            <param name="httpsOptions">
+            Options to configure HTTPS.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Server.KestrelServerOptions.
+            </returns>
+        </member>
+    </members>
+</doc>
